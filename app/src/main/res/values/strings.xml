@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Hencr</string>
+    <string name="my_data"><u>My Data</u></string>
 </resources>

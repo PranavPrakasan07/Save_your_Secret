@@ -1,5 +1,6 @@
 package com.example.hencr;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.util.Log;
@@ -67,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         textView = findViewById(R.id.text);
-        button = findViewById(R.id.button);
+        button = findViewById(R.id.backButton);
 
 
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
@@ -87,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sqlButton();
+                startActivity(new Intent(getApplicationContext(), MainActivity2.class));
             }
         });
 
