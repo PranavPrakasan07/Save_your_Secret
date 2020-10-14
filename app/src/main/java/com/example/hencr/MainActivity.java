@@ -37,7 +37,6 @@ public class MainActivity extends AppCompatActivity {
             try {
                 statement = connection.createStatement();
 
-
                 ResultSet resultSet = statement.executeQuery("Select * from ena;");
                 resultSet.next();
 
@@ -47,17 +46,12 @@ public class MainActivity extends AppCompatActivity {
                 Log.d("SearchAbsent", resultSet.getString(1));
                 Log.d("SearchAbsent", resultSet.getString(2));
 
-                while(resultSet.next())
-                {
-
-                }
-
             } catch (SQLException e) {
                 e.printStackTrace();
             }
         }
         else {
-            textView.setText("Connection is null");
+            Log.d("Status", "Connection is null");
         }
     }
 
@@ -67,22 +61,20 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        textView = findViewById(R.id.text);
         button = findViewById(R.id.backButton);
-
 
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
         try {
             Class.forName(Classes);
             connection = DriverManager.getConnection(url, username,password);
-            textView.setText("SUCCESS");
+            Log.d("status", "SUCCESS");
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
-            textView.setText("ERROR");
+            Log.d("Status", "ERROR");
         } catch (SQLException e) {
             e.printStackTrace();
-            textView.setText("FAILURE");
+            Log.d("Status", "FAILURE");
         }
 
         button.setOnClickListener(new View.OnClickListener() {
@@ -98,14 +90,14 @@ public class MainActivity extends AppCompatActivity {
             try {
                 statement = connection.createStatement();
                 resultSet = statement.executeQuery("Select * from tabla");
-                textView.setText(resultSet.getString(2));
+                Log.d("Message", resultSet.getString(2));
 
             } catch (SQLException e) {
                 e.printStackTrace();
             }
         }
         else {
-            textView.setText("Connection is null");
+            Log.d("Message", "Connection is null");
         }
 
     }
