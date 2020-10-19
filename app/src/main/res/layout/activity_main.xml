@@ -21,7 +21,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <View
-        android:id="@+id/divider2"
+        android:id="@+id/divider_head"
         android:layout_width="0dp"
         android:layout_height="3dp"
         android:layout_marginStart="32dp"
@@ -40,14 +40,18 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
         android:layout_marginTop="32dp"
+        android:layout_marginEnd="32dp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/divider2">
+        app:layout_constraintTop_toBottomOf="@+id/divider_head">
 
         <RadioButton
             android:id="@+id/radioButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
+            android:layout_weight="1"
             android:fontFamily="@font/montserrat_regular"
             android:text="ID"
             android:textColor="#FFFFFF"
@@ -58,27 +62,18 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
+            android:layout_weight="1"
             android:fontFamily="@font/montserrat_regular"
             android:text="Bank"
             android:textColor="#FFFFFF"
             android:textSize="20sp" />
-
-    </RadioGroup>
-
-
-    <RadioGroup
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:layout_marginEnd="32dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/divider2">
 
         <RadioButton
             android:id="@+id/radioButton3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
+            android:layout_weight="1"
             android:fontFamily="@font/montserrat_regular"
             android:text="Contact"
             android:textColor="#FFFFFF"
@@ -86,16 +81,21 @@
 
     </RadioGroup>
 
+
     <androidx.cardview.widget.CardView
+        android:id="@+id/card"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="64dp"
+        android:layout_marginTop="32dp"
         android:layout_marginEnd="32dp"
+        android:layout_marginBottom="32dp"
         android:background="@drawable/input_cards"
         android:elevation="20dp"
+        android:visibility="visible"
         app:cardBackgroundColor="#414141"
         app:cardCornerRadius="20dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/radioGroup">
@@ -113,9 +113,9 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
                 android:fontFamily="@font/montserrat_regular"
-                android:text="TextView"
+                android:padding="12dp"
                 android:textColor="#FFFFFF"
-                android:textSize="20sp" />
+                android:textSize="18sp" />
 
             <View
                 android:id="@+id/divider"
@@ -127,14 +127,76 @@
                 android:backgroundTintMode="add" />
 
             <TextView
+                android:id="@+id/textView33"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:fontFamily="@font/montserrat_regular"
+
+                android:padding="12dp"
+                android:textColor="#FFFFFF"
+                android:textSize="20sp" />
+
+
+            <TextView
                 android:id="@+id/textView4"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
                 android:background="@drawable/input_cards"
                 android:fontFamily="@font/montserrat_regular"
                 android:padding="12dp"
-                android:text="TextView"
+                android:textColor="#FFFFFF"
+                android:textSize="18sp" />
+
+            <View
+                android:id="@+id/divider1"
+                android:layout_width="match_parent"
+                android:layout_height="3dp"
+                android:layout_margin="8dp"
+                android:background="?android:attr/listDivider"
+                android:backgroundTint="#C2185B"
+                android:backgroundTintMode="add" />
+
+            <TextView
+                android:id="@+id/textView44"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:background="@drawable/input_cards"
+                android:fontFamily="@font/montserrat_regular"
+                android:padding="12dp"
+                android:textColor="#FFFFFF"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/textView5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:background="@drawable/input_cards"
+                android:fontFamily="@font/montserrat_regular"
+                android:padding="12dp"
+                android:textColor="#FFFFFF"
+                android:textSize="18sp" />
+
+            <View
+                android:id="@+id/divider2"
+                android:layout_width="match_parent"
+                android:layout_height="3dp"
+                android:layout_margin="8dp"
+                android:background="?android:attr/listDivider"
+                android:backgroundTint="#C2185B"
+                android:backgroundTintMode="add" />
+
+            <TextView
+                android:id="@+id/textView55"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:background="@drawable/input_cards"
+                android:fontFamily="@font/montserrat_regular"
+                android:padding="12dp"
                 android:textColor="#FFFFFF"
                 android:textSize="20sp" />
 
@@ -152,6 +214,7 @@
         android:textColor="#FFFFFF"
         android:textSize="30sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="gone" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

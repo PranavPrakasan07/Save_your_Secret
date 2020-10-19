@@ -1,7 +1,6 @@
 package com.example.hencr;
 
 import java.math.BigInteger;
-import java.math.*;
 public class numcount {
 	
 	public BigInteger numCounter(BigInteger n){

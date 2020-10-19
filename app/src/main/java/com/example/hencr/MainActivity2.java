@@ -1,38 +1,25 @@
 package com.example.hencr;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.content.Context;
 import android.content.Intent;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
+
 import java.math.BigInteger;
-import java.net.Inet4Address;
-import java.net.InetAddress;
-import java.net.NetworkInterface;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Enumeration;
 import java.util.Random;
 
 public class MainActivity2 extends AppCompatActivity {
@@ -61,8 +48,8 @@ public class MainActivity2 extends AppCompatActivity {
 
     RadioGroup radioGroup;
 
-    String username_user;
-    String password_user;
+    String enc_username_user;
+    String enc_password_user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,26 +59,18 @@ public class MainActivity2 extends AppCompatActivity {
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
 
-        Bundle bundle = getIntent().getExtras();
+        final Bundle bundle = getIntent().getExtras();
         assert bundle != null;
-        username_user = bundle.getString("email");
-        password_user = bundle.getString("password");
-
-        assert username != null;
-        Log.d("Username", username);
-        assert password != null;
-        Log.d("Password", password);
-
+        enc_username_user = bundle.getString("email");
+        enc_password_user = bundle.getString("password");
 
         try {
             Class.forName(Classes);
             connection = DriverManager.getConnection(url, username,password);
             Log.d("Status", "SUCCESS");
         } catch (ClassNotFoundException e) {
-            e.printStackTrace();
             Log.d("Status", "ERROR");
         } catch (SQLException e) {
-            e.printStackTrace();
             Log.d("Status", "FAILURE");
         }
 
@@ -107,17 +86,13 @@ public class MainActivity2 extends AppCompatActivity {
 
         final String[] choice = new String[1];
 
-        final String[] e1text = new String[1];
-        final String[] e2text = new String[1];
-        final String[] e3text = new String[1];
-
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 switch (checkedId)
                 {
                     case R.id.radioButton :
-                        Toast.makeText(MainActivity2.this, "Add your ID details", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MainActivity2.this, "Add your ID Details", Toast.LENGTH_SHORT).show();
                         e1.setHint("Aadhaar Number");
                         e2.setHint("Ratio Number");
                         e3.setHint("Licence Number");
@@ -134,7 +109,7 @@ public class MainActivity2 extends AppCompatActivity {
 
 
                     case R.id.radioButton3 :
-                        Toast.makeText(MainActivity2.this, "Add your Contact number", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MainActivity2.this, "Add your Contact Details", Toast.LENGTH_SHORT).show();
                         e1.setHint("Contact Number");
                         e2.setHint("WhatsApp Contact");
                         e3.setHint("Pin Code");
@@ -148,7 +123,12 @@ public class MainActivity2 extends AppCompatActivity {
         history.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                Bundle bundle1 = new Bundle();
+                bundle1.putString("username", enc_username_user);
+                bundle1.putString("password", enc_password_user);
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                intent.putExtras(bundle1);
+                startActivity(intent);
             }
         });
 
@@ -156,20 +136,6 @@ public class MainActivity2 extends AppCompatActivity {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View v) {
-
-//                if(e1.getText().toString().isEmpty())
-//                {
-//                    e1text[0] = "0";
-//                }
-//                if(e2.getText().toString().isEmpty())
-//                {
-//                    e2text[0] = "0";
-//                }
-//                if(e3.getText().toString().isEmpty())
-//                {
-//                    e3text[0] = "0";
-//                }
-
                 Log.d("Message", choice[0]);
                 insertdata(e1.getText().toString(), e2.getText().toString(), e3.getText().toString(), choice[0]);
             }
@@ -206,13 +172,10 @@ public class MainActivity2 extends AppCompatActivity {
             BigInteger enb=paillier.EncrypStr(b,r);
             BigInteger c1=new BigInteger(c);
             BigInteger enc=paillier.EncrypStr(c,r);
-            BigInteger ene=paillier.EncrypStr(username_user,r);
-            BigInteger enf=paillier.EncrypStr(password_user,r);
 
             String end=aesen.encrypt(d);
 
-            st.executeUpdate("UPDATE credential_table SET email = '" + ene + "', password_hash = '" + enf + "' WHERE email = '"+ username_user +"' AND password_hash = '"+ password_user +"';");
-            st.executeUpdate("INSERT INTO "+ d +" VALUES('" + ene + "', '" + enf + "', '"+ ena +"','"+ enb +"','"+ enc +"')");
+            st.executeUpdate("INSERT INTO "+ d +" VALUES('" + enc_username_user + "', '" + enc_password_user + "', '"+ ena +"','"+ enb +"','"+ enc +"')");
             Log.d("Message", ena+" "+enb+" "+enc );
 
             Log.d("Message", paillier.DecrpyStr(new BigInteger(String.valueOf(ena))));
@@ -227,7 +190,7 @@ public class MainActivity2 extends AppCompatActivity {
 
         }catch(Exception e)
         {
-            System.out.println("Error in connection" + e);
+            Log.d("Error in connection" , String.valueOf(e));
         }
     }
 

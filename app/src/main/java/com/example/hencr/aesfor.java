@@ -1,6 +1,7 @@
 package com.example.hencr;
 
 import android.os.Build;
+import android.util.Log;
 
 import androidx.annotation.RequiresApi;
 
@@ -49,7 +50,7 @@ public class aesfor {
         } 
         catch (Exception e) 
         {
-            System.out.println("Error while encrypting: " + e.toString());
+            Log.d("Error while encrypting: " , e.toString());
         }
         return null;
     }
@@ -66,7 +67,7 @@ public class aesfor {
         } 
         catch (Exception e) 
         {
-            System.out.println("Error while decrypting: " + e.toString());
+            Log.d("Error while decrypting: " , e.toString());
         }
         return null;
     }

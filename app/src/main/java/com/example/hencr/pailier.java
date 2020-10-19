@@ -1,5 +1,7 @@
 package com.example.hencr;
 
+import android.util.Log;
+
 import java.math.*;
 import java.util.*;
 
@@ -42,8 +44,8 @@ public class pailier {
 	p.subtract(BigInteger.ONE).gcd(q.subtract(BigInteger.ONE)));
 
 	if (g.modPow(lambda, nsquare).subtract(BigInteger.ONE).divide(n).gcd(n).intValue() != 1) {
-	System.out.println("g is not good. Choose g again.");
-	System.exit(1);
+		Log.d("Message", "g is not good. Choose g again.");
+		System.exit(1);
 	}
 	}
 	
@@ -61,7 +63,7 @@ public class pailier {
 	p.subtract(BigInteger.ONE).gcd(q.subtract(BigInteger.ONE)));
 
 	if (g.modPow(lambda, nsquare).subtract(BigInteger.ONE).divide(n).gcd(n).intValue() != 1) {
-	System.out.println("g is not good. Choose g again.");
+	Log.d("Message", "g is not good. Choose g again.");
 	System.exit(1);
 	}
 	}
