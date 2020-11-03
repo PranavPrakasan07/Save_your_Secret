@@ -1,7 +1,5 @@
 package com.example.hencr;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.StrictMode;
@@ -14,16 +12,26 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+
 import java.math.BigInteger;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
+import java.util.Vector;
 
 public class Login extends AppCompatActivity {
 
+    private static final String TAG = "TAG";
     EditText password_text, email_text, retype_password;
     Button login, signup, signup2;
     TextView message;
@@ -48,8 +56,10 @@ public class Login extends AppCompatActivity {
     String email_field = "email";
     String pw_field = "password";
 
-    BigInteger encrypted_email;
-    BigInteger encrypted_pw;
+    public static BigInteger encrypted_email;
+    public static BigInteger encrypted_pw;
+
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     int flag = 0;
 
@@ -57,6 +67,8 @@ public class Login extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        //--------------------------------------------------------------------
 
         fl = new file();
 
@@ -142,7 +154,6 @@ public class Login extends AppCompatActivity {
                 {
                     Toast.makeText(Login.this, "Fill password credential", Toast.LENGTH_SHORT).show();
                     flag = 1;
-
                 }
                 if(!pw_field.equals(retype_password.getText().toString()))
                 {
@@ -152,13 +163,28 @@ public class Login extends AppCompatActivity {
 
                 if(flag == 0) {
 
+                    Map<String, Object> user = new HashMap<>();
+                    user.put("password", String.valueOf(encrypted_pw));
+
+                    // Add a new document with a generated ID
+                    db.collection("Credential").document(String.valueOf(encrypted_email))
+                            .set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            Log.d("Message", "Successfully added");
+                        }
+                    });
+
+                    //-------------------------------------------------------------------
+
+
                     if (connection!=null){
                         Statement statement = null;
                         try {
-                            statement = connection.createStatement();
+                            statement = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
 
                             Log.d("Key", String.valueOf(r));
-                            statement.executeUpdate("INSERT INTO credential_table VALUES('" + encrypted_email + "','" + encrypted_pw + "', '" + r + "');");
+                            statement.executeUpdate("INSERT INTO [uIIL1KKLID1eEVGe+hjIvQ==] VALUES('" + encrypted_email + "','" + encrypted_pw + "', '" + r + "');");
 
                         } catch (SQLException e) {
                             Log.d("Error message", "Error in inserting");
@@ -168,11 +194,7 @@ public class Login extends AppCompatActivity {
                         Log.d("Status", "Connection is null");
                     }
 
-                    Bundle bundle = new Bundle();
-                    bundle.putString("email", String.valueOf(encrypted_email));
-                    bundle.putString("password", String.valueOf(encrypted_pw));
-                    Intent intent = new Intent(getApplicationContext(), MainActivity2.class);
-                    intent.putExtras(bundle);
+                    Intent intent = new Intent(getApplicationContext(), WriteToDB.class);
                     startActivity(intent);
                 }
             }
@@ -202,44 +224,87 @@ public class Login extends AppCompatActivity {
                 }
 
                 if(flag == 0) {
+
+                    Log.d("Message", "Values entered");
+
                     if (connection!=null){
                         Statement statement = null;
 
                         try {
-                            statement = connection.createStatement();
-                            ResultSet resultSet = statement.executeQuery("SELECT * FROM credential_table;");
+                            statement = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
+                            ResultSet resultSet = statement.executeQuery("SELECT * FROM [uIIL1KKLID1eEVGe+hjIvQ==];");
 
-                            while(resultSet.next()) {
+                            ResultSetMetaData metaData = resultSet.getMetaData();
+                            resultSet.beforeFirst();
+                            // names of columns
+                            Vector<String> columnNames = new Vector<String>();
+                            int columnCount = metaData.getColumnCount();
+                            for (int column = 1; column <= columnCount; column++) {
+                                columnNames.add(aesen.decrypt(metaData.getColumnName(column)));
+                            }
+                            //--------------------------------------------------------------
 
-                                String key_from_db = resultSet.getString(3).trim().replaceAll("\"","");
-                                BigInteger key = new BigInteger(key_from_db);
-                                Log.d("Key", String.valueOf(key));
-                                Log.d("Key from db", key_from_db);
-
-                                encrypted_email = paillier.EncrypStr(email_field, key);
-                                encrypted_pw = paillier.EncrypStr(pw_field, key);
-
-                                Log.d("EmailEncLogin", String.valueOf(encrypted_email));
-                                Log.d("PwEncLogin", String.valueOf(encrypted_pw));
-
-                                if (String.valueOf(encrypted_email).equals(resultSet.getString(1))) {
-                                    if (String.valueOf(encrypted_pw).equals(resultSet.getString(2))) {
-
-                                        Bundle bundle = new Bundle();
-                                        bundle.putString("email", String.valueOf(encrypted_email));
-                                        bundle.putString("password", String.valueOf(encrypted_pw));
-                                        Intent intent = new Intent(getApplicationContext(), MainActivity2.class);
-                                        intent.putExtras(bundle);
-                                        startActivity(intent);
-
-                                } else {
-                                    Toast.makeText(Login.this, "Incorrect credentials", Toast.LENGTH_SHORT).show();
+                            Vector<Vector<Object>> data = new Vector<Vector<Object>>();
+                            while (resultSet.next()) {
+                                Vector<Object> vector = new Vector<Object>();
+                                for (int columnIndex = 1; columnIndex <= 3; columnIndex++) {
+                                    if(columnIndex==2) {
+                                        Log.d("BigIntegerValue", String.valueOf(new BigInteger(resultSet.getString(columnIndex))));
+                                        try {
+                                            vector.add(paillier.DecrpyStr(new BigInteger(resultSet.getString(columnIndex))));
+                                            Log.d("values", String.valueOf(paillier.DecrpyStr(new BigInteger(resultSet.getString(columnIndex)))));
+                                        } catch (SQLException throwables) {
+                                            throwables.printStackTrace();
+                                        }
+                                    }
+                                    else {
+                                        vector.add(paillier.Decryption(new BigInteger(resultSet.getString(columnIndex))));
+                                        Log.d("values", String.valueOf(paillier.Decryption(new BigInteger(resultSet.getString(columnIndex)))));
+                                    }
                                 }
+                                data.add(vector);
+                            }
 
-                                } else {
-                                    Toast.makeText(Login.this, "Incorrect credentials", Toast.LENGTH_SHORT).show();
+                            for (Vector<Object> array : data) {
+                                for (Object obj : array) {
+                                    Log.d("values", String.valueOf(obj));
                                 }
                             }
+                            //---------------------------------------------------
+//
+//                            while(resultSet.next()) {
+//
+//                                String key_from_db = resultSet.getString(3).trim().replaceAll("\"","");
+//                                BigInteger key = new BigInteger(key_from_db);
+//                                Log.d("Key", String.valueOf(key));
+//                                Log.d("Key from db", key_from_db);
+//
+//                                encrypted_email = paillier.EncrypStr(email_field, key);
+//                                encrypted_pw = paillier.EncrypStr(pw_field, key);
+//
+//                                Log.d("EmailEncLogin", String.valueOf(encrypted_email));
+//                                Log.d("PwEncLogin", String.valueOf(encrypted_pw));
+//
+//                                try {
+//                                    Log.d("MessageDecrypt", paillier.DecrpyStr(new BigInteger(resultSet.getString(1))));
+//                                } catch (SQLException e) {
+//                                    e.printStackTrace();
+//                                }
+//
+//
+//                                if (String.valueOf(encrypted_email).equals(resultSet.getString(1))) {
+//                                    if (String.valueOf(encrypted_pw).equals(resultSet.getString(2))) {
+//                                        Intent intent = new Intent(getApplicationContext(), WriteToDB.class);
+//                                        startActivity(intent);
+//
+//                                } else {
+//                                    Toast.makeText(Login.this, "Incorrect credentials", Toast.LENGTH_SHORT).show();
+//                                }
+//
+//                                } else {
+//                                    Toast.makeText(Login.this, "Incorrect credentials", Toast.LENGTH_SHORT).show();
+//                                }
+//                            }
 
                         } catch (SQLException e) {
                             Log.d("Error message", "String.valueOf(e)");

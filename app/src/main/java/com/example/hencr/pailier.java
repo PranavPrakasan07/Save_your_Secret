@@ -88,20 +88,31 @@ public BigInteger EncrypStr(String st,BigInteger r){
 		num=num.multiply(BigInteger.valueOf(1000)).add(BigInteger.valueOf(temp));
 	}
 	BigInteger enc=Encryption(num,r);
-	return enc;}
+	return enc;
+	}
 	
 String DecrpyStr(BigInteger num){
 	BigInteger num1=Decryption(num);
+	Log.d("SecondBig", String.valueOf(num1));
 	int strc = num1.toString().length();
-    String m=num1.toString();
+	Log.d("strc length", String.valueOf(strc));
+
+    String m = num1.toString();
+	Log.d("m string", m);
+
 	if(strc % 3 != 0)
 	    {
 	       m = "0" + m;
 	    }
-	 String strd = "";
+
+	 StringBuilder strd = new StringBuilder();
+
 	 for (int i = 0; i < m.length(); i += 3)
 	    {
-	        strd += (char)(Integer.parseInt(m.substring(i, i + 3)));
-	    }
-	return strd;}}
+	        strd.append((char) (Integer.parseInt(m.substring(i, i + 3))));
+			Log.d("Process", String.valueOf((strd)));
+		}
+	return strd.toString();
+	}
+}
 	

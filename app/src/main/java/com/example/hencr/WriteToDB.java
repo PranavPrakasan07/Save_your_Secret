@@ -15,15 +15,20 @@ import android.widget.Toast;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+
 import java.math.BigInteger;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Objects;
 import java.util.Random;
 
-public class MainActivity2 extends AppCompatActivity {
-
+public class WriteToDB extends AppCompatActivity {
 
     private static String ip = "192.168.43.205";
     private static String port = "1433";
@@ -48,9 +53,9 @@ public class MainActivity2 extends AppCompatActivity {
 
     RadioGroup radioGroup;
 
-    String enc_username_user;
-    String enc_password_user;
-
+    public static BigInteger enc_username_user = Login.encrypted_email;
+    public static BigInteger enc_password_user = Login.encrypted_pw;
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,11 +63,6 @@ public class MainActivity2 extends AppCompatActivity {
 
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
-
-        final Bundle bundle = getIntent().getExtras();
-        assert bundle != null;
-        enc_username_user = bundle.getString("email");
-        enc_password_user = bundle.getString("password");
 
         try {
             Class.forName(Classes);
@@ -78,6 +78,22 @@ public class MainActivity2 extends AppCompatActivity {
         e2 = findViewById(R.id.e2);
         e3 = findViewById(R.id.e3);
 
+        db.collection("Credential").document(String.valueOf(enc_username_user)).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                Log.d("ThisistheValue", String.valueOf(enc_username_user));
+                Log.d("ThisistheValue", String.valueOf(Objects.requireNonNull(documentSnapshot.get("password"))));
+
+                try {
+                    Log.d("Message", paillier.DecrpyStr(new BigInteger(String.valueOf(Objects.requireNonNull(documentSnapshot.get("password"))))));
+                    Log.d("Message", paillier.DecrpyStr(new BigInteger(String.valueOf(Objects.requireNonNull(documentSnapshot.get("password"))))));
+                    Log.d("Message", paillier.DecrpyStr(new BigInteger(String.valueOf(Objects.requireNonNull(documentSnapshot.get("password"))))));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
         radioGroup = findViewById(R.id.radioGroup);
 
         button = findViewById(R.id.button);
@@ -92,15 +108,15 @@ public class MainActivity2 extends AppCompatActivity {
                 switch (checkedId)
                 {
                     case R.id.radioButton :
-                        Toast.makeText(MainActivity2.this, "Add your ID Details", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(WriteToDB.this, "Add your ID Details", Toast.LENGTH_SHORT).show();
                         e1.setHint("Aadhaar Number");
-                        e2.setHint("Ratio Number");
+                        e2.setHint("Ration Number");
                         e3.setHint("Licence Number");
-                        choice[0] = "IDDetails";
+                        choice[0] = "iddetails";
                         break;
 
                     case R.id.radioButton2 :
-                        Toast.makeText(MainActivity2.this, "Add your Bank Details", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(WriteToDB.this, "Add your Bank Details", Toast.LENGTH_SHORT).show();
                         e1.setHint("Card Number");
                         e2.setHint("CVV Number");
                         e3.setHint("Pin Number");
@@ -109,7 +125,7 @@ public class MainActivity2 extends AppCompatActivity {
 
 
                     case R.id.radioButton3 :
-                        Toast.makeText(MainActivity2.this, "Add your Contact Details", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(WriteToDB.this, "Add your Contact Details", Toast.LENGTH_SHORT).show();
                         e1.setHint("Contact Number");
                         e2.setHint("WhatsApp Contact");
                         e3.setHint("Pin Code");
@@ -123,11 +139,7 @@ public class MainActivity2 extends AppCompatActivity {
         history.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Bundle bundle1 = new Bundle();
-                bundle1.putString("username", enc_username_user);
-                bundle1.putString("password", enc_password_user);
-                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                intent.putExtras(bundle1);
+                Intent intent = new Intent(getApplicationContext(), ReadFromDB.class);
                 startActivity(intent);
             }
         });
@@ -162,34 +174,68 @@ public class MainActivity2 extends AppCompatActivity {
 
     }
 
-    public void insertdata(String a, String b, String c, String d){
+    public void insertdata(String a, String b, String c, String d) {
         try{
             Class.forName("net.sourceforge.jtds.jdbc.Driver");
             Connection con= DriverManager.getConnection("jdbc:jtds:sqlserver://"+ip+":1433/"+database,username,password);
-            Statement st=con.createStatement();
-            BigInteger a1=new BigInteger(a);
-            BigInteger ena=paillier.EncrypStr(a,r);
-            BigInteger enb=paillier.EncrypStr(b,r);
-            BigInteger c1=new BigInteger(c);
-            BigInteger enc=paillier.EncrypStr(c,r);
 
-            String end=aesen.encrypt(d);
 
-            st.executeUpdate("INSERT INTO "+ d +" VALUES('" + enc_username_user + "', '" + enc_password_user + "', '"+ ena +"','"+ enb +"','"+ enc +"')");
-            Log.d("Message", ena+" "+enb+" "+enc );
+//            Statement st=con.createStatement();
+//            BigInteger a1=new BigInteger(a);
+//            BigInteger ena=paillier.EncrypStr(a,r);
+//            BigInteger enb=paillier.EncrypStr(b,r);
+//            BigInteger c1=new BigInteger(c);
+//            BigInteger enc=paillier.EncrypStr(c,r);
+//
+//            String end=aesen.encrypt(d);
+//
+//            st.executeUpdate("INSERT INTO "+ d +" VALUES('" + enc_username_user + "', '" + enc_password_user + "', '"+ ena +"','"+ enb +"','"+ enc +"')");
+//            Log.d("Message", ena+" "+enb+" "+enc );
+//
+//            Log.d("Message", paillier.DecrpyStr(new BigInteger(String.valueOf(ena))));
+//            Log.d("Message", paillier.DecrpyStr(new BigInteger(String.valueOf(enb))));
+//            Log.d("Message", paillier.DecrpyStr(new BigInteger(String.valueOf(enc))));
+//
+//            e1.setText("");
+//            e2.setText("");
+//            e3.setText("");
+//
+//            con.close();
+//
+//        }catch(Exception e)
+//        {
+//            Log.d("Error in connection" , String.valueOf(e));
+//        }
 
-            Log.d("Message", paillier.DecrpyStr(new BigInteger(String.valueOf(ena))));
-            Log.d("Message", paillier.DecrpyStr(new BigInteger(String.valueOf(enb))));
-            Log.d("Message", paillier.DecrpyStr(new BigInteger(String.valueOf(enc))));
+            Statement st = con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
+            BigInteger ena = paillier.EncrypStr(a, r);
+            BigInteger enb = paillier.EncrypStr(b, r);
+            BigInteger enc = paillier.EncrypStr(c, r);
 
-            e1.setText("");
-            e2.setText("");
-            e3.setText("");
+            String choice = null;
+
+            if(d.equals("iddetails"))
+            {
+                choice = "An/NI+HyK1ZtS3gcUVfqqw==";
+            }
+            else if (d.equals("contact"))
+            {
+                choice = "Og4Dcf6Sq0uEGL3bBxLRog==";
+            }
+            else if (d.equals("bank"))
+            {
+                choice = "sDbW5jImEJiWJfxb+LWMww==";
+            }
+
+            st.executeUpdate("INSERT INTO [" + choice + "] VALUES('" + enc_username_user + "', '" + enc_password_user + "', '" + ena + "','" + enb + "','" + enc + "')");
+
+            Log.d("Decr", paillier.DecrpyStr(new BigInteger(String.valueOf(ena))));
+            Log.d("Decr", paillier.DecrpyStr(new BigInteger(String.valueOf(enb))));
+            Log.d("Decr", paillier.DecrpyStr(new BigInteger(String.valueOf(enc))));
 
             con.close();
 
-        }catch(Exception e)
-        {
+        } catch (Exception e) {
             Log.d("Error in connection" , String.valueOf(e));
         }
     }

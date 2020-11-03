@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/back"
-    tools:context=".MainActivity">
+    tools:context=".ReadFromDB">
 
     <TextView
         android:id="@+id/textView2"
@@ -24,11 +24,11 @@
         android:id="@+id/divider_head"
         android:layout_width="0dp"
         android:layout_height="3dp"
-        android:layout_marginStart="32dp"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:layout_marginEnd="32dp"
+        android:layout_marginEnd="16dp"
         android:background="?android:attr/listDivider"
-        android:backgroundTint="#7A0F39"
+        android:backgroundTint="#0288D1"
         android:backgroundTintMode="add"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -90,10 +90,10 @@
         android:layout_marginTop="32dp"
         android:layout_marginEnd="32dp"
         android:layout_marginBottom="32dp"
-        android:background="@drawable/input_cards"
+        android:background="@drawable/incorrect_data"
         android:elevation="20dp"
         android:visibility="visible"
-        app:cardBackgroundColor="#414141"
+        app:cardBackgroundColor="#00FFFFFF"
         app:cardCornerRadius="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -102,9 +102,9 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            android:background="@drawable/input_cards"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical|center_horizontal"
+            android:background="@drawable/incorrect_data"
             android:orientation="vertical">
 
             <TextView
@@ -123,7 +123,7 @@
                 android:layout_height="3dp"
                 android:layout_margin="8dp"
                 android:background="?android:attr/listDivider"
-                android:backgroundTint="#C2185B"
+                android:backgroundTint="#0288D1"
                 android:backgroundTintMode="add" />
 
             <TextView
@@ -132,7 +132,6 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
                 android:fontFamily="@font/montserrat_regular"
-
                 android:padding="12dp"
                 android:textColor="#FFFFFF"
                 android:textSize="20sp" />
@@ -143,7 +142,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
-                android:background="@drawable/input_cards"
                 android:fontFamily="@font/montserrat_regular"
                 android:padding="12dp"
                 android:textColor="#FFFFFF"
@@ -155,7 +153,7 @@
                 android:layout_height="3dp"
                 android:layout_margin="8dp"
                 android:background="?android:attr/listDivider"
-                android:backgroundTint="#C2185B"
+                android:backgroundTint="#0288D1"
                 android:backgroundTintMode="add" />
 
             <TextView
@@ -163,7 +161,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
-                android:background="@drawable/input_cards"
                 android:fontFamily="@font/montserrat_regular"
                 android:padding="12dp"
                 android:textColor="#FFFFFF"
@@ -174,7 +171,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
-                android:background="@drawable/input_cards"
                 android:fontFamily="@font/montserrat_regular"
                 android:padding="12dp"
                 android:textColor="#FFFFFF"
@@ -186,7 +182,7 @@
                 android:layout_height="3dp"
                 android:layout_margin="8dp"
                 android:background="?android:attr/listDivider"
-                android:backgroundTint="#C2185B"
+                android:backgroundTint="#0288D1"
                 android:backgroundTintMode="add" />
 
             <TextView
@@ -194,7 +190,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
-                android:background="@drawable/input_cards"
                 android:fontFamily="@font/montserrat_regular"
                 android:padding="12dp"
                 android:textColor="#FFFFFF"

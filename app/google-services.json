@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "979541774824",
+    "firebase_url": "https://save-secret.firebaseio.com",
+    "project_id": "save-secret",
+    "storage_bucket": "save-secret.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:979541774824:android:99e7b4b59246e7afe9545d",
+        "android_client_info": {
+          "package_name": "com.example.hencr"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "979541774824-63hmspj1osp8dinha6dm1h0o2jabr0nm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBil_UrJfdtvaRz5je5Dn9D7y7ZkfQL-Ow"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "979541774824-63hmspj1osp8dinha6dm1h0o2jabr0nm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
